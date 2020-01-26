@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+{% load static %}
+<html>
+  <head>
+    <title>TEST</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css" integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <link href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap-glyphicons.css" rel="stylesheet">
+    <!-- <link rel="stylesheet" href="{% static 'css/style.css'%}"> -->
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <!-- <script src="https://code.jquery.com/jquery-3.1.1.min.js"> -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js" integrity="sha384-UO2eT0CpHqdSJQ6hJty5KVphtPhzWj9WO1clHTMGa3JDZwrnQq4sF86dIHNDz0W1" crossorigin="anonymous"></script>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js" integrity="sha384-JjSmVgyd0p3pXB1rRibZUAYoIIy6OrQ6VrjIEaFf/nJGzIxFDsf4x0xIM+B07jRM" crossorigin="anonymous"></script>
+    <link href="https://fonts.googleapis.com/css?family=Manjari&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Roboto+Slab&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css?family=Patua+One&display=swap" rel="stylesheet">
+
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css" />
+
+
+    <style media="screen">
+    .n{
+      background-color: #ffffff;
+    }
+    .a{
+      text-decoration: none;
+      color: #ffffff;
+    }
+    a:hover, a:active {
+      text-decoration: none;
+      color: #4756e2;
+    }
+    .link,h1{
+      font-family: 'Manjari', sans-serif;
+      color: #565265;
+      position: relative;
+      padding: 0 0 0 20px;
+      font-size: 125%;
+      font-weight: bold;
+    }
+    .a1{
+    position: relative;
+        padding: 20px 20px 10px 100px;
+    }
+    .a2{
+      display: inline-block;
+      position: relative;
+      padding: 10px 0 10px 0px;
+      margin: 0px;
+    }
+    .a3{
+      display: inline-block;
+      position: relative;
+      padding: 10px 0 10px 5px;
+      margin: 0px;
+    }
+    .a4{
+      color: white;
+      position: relative;
+      padding-left: 225px;
+    }
+    .search-box {
+        border: 2px solid lightgray;
+        background-color: #fff;
+        border-radius: 5px;
+        position: relative;
+        margin-left: 20px;
+        width: 400px;
+        height: 50px;
+    }
+    .search-but{
+        border: 0.1px solid #232F3E;
+        background-color: #F3A847;
+        height: 50px;
+        width: 45px;
+        position: relative;
+        border-radius: 5px;
+        cursor: pointer;
+    }
+    /* footer */
+
+    </style>
+
+  </head>
+  <body>
+
+  <div class="a ">
+      <nav class="n navbar navbar-expand-lg navbar-light fixed-top">
+        <div class="a1">
+          <img width="200" height="70" src="{% static 'Smartpick.png' %}" alt="Smartpick" title="Smartpick" />
+        </div>
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+              <a class="link nav-item active" href="{% url 'home' %}">Home</a>
+              <a class="link " href="{% url 'compare' %}">compare</a>
+              <a class="link " href="{% url 'register' %}">Register</a>
+
+          {% if user.is_authenticated %}
+            <a class="link" href="{% url 'logout' %}">Logout</a>
+            <a class="link" href="#">Help</a>
+            {% if user.is_superuser %}
+            <a class="link" href="#">Welcome Admin {{user.username}}</a>
+            {% else %}
+            <a class="link" href="#">Welcome {{user.username}}</a>
+            {% endif %}
+          {% else %}
+            <a class="link" href="{% url 'user_login' %}">Login</a>
+            <a class="link" href="#">Help</a>
+          {% endif %}
+        </div>
+        <div class="a2">
+          <form class="" action="{% url 'result' %} ">
+            {% csrf_token %}
+            <input type="search" class="search-box" name="fulltext" autoComplete="off" placeholder=" Search for products, brands and more" value={{insert_me}}>
+        </div>
+        <div class="a3">
+            <button type="submit" class="search-but">
+              <img src="{% static 'search.png' %}" width="35" height="35" class="search-img">
+            </button>
+          </form>
+        </div>
+      </nav>
+
+  </div>
+  <br><br>
+  <br><br>
+  <br>
+
+      {% block content %}
+      {% endblock%}
+  </body>
+
+</html>

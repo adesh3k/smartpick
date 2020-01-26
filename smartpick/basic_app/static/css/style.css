@@ -1,0 +1,38 @@
+.a{
+  background-color: #232F3E;
+  padding-bottom: 0px;
+}
+.a1{
+    padding: 30px 0 15px 150px;
+}
+.a2{
+  display: inline-block;
+  vertical-align: top;
+  padding: 20px 0 0 10px;
+  margin: 0px;
+}
+.a3{
+    display: inline-block;
+  vertical-align: top;
+  padding: 20px 0 0 0;
+  margin: 0px;
+}
+.a4{
+  color: white;
+  padding-left: 225px;
+}
+.search-box {
+    border: 0.1px solid #232F3E;
+    background-color: #fff;
+    border-radius: 2px;
+    width: 400px;
+    height: 40px;
+}
+.search-but{
+    border: 0.1px solid #232F3E;
+    background-color: #F3A847;
+    height: 40px;
+    width: 45px;
+    border-radius: 2px;
+    cursor: pointer;
+}

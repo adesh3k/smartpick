@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+{% extends "basic_app/base.html" %}
+{% load staticfiles %}
+{% block content %}
+<style media="screen">
+
+
+.registration {
+  width: 400px;
+  margin: 16px auto;
+  font-size: 16px;
+}
+
+/* Reset top and bottom margins from certain elements */
+.registration-header,
+.registration p {
+  margin-top: 0;
+  margin-bottom: 0;
+}
+
+/* The triangle form is achieved by a CSS hack */
+.registration-triangle {
+  width: 0;
+  margin-right: auto;
+  margin-left: auto;
+  border: 12px solid transparent;
+  border-bottom-color: #28d;
+}
+
+.registration-header {
+  background: #28d;
+  padding: 20px;
+  font-size: 1.4em;
+  font-weight: normal;
+  text-align: center;
+  text-transform: uppercase;
+  color: #fff;
+}
+
+.registration-container {
+  background: #ebebeb;
+  padding: 12px;
+}
+
+/* Every row inside .registration-container is defined with p tags */
+.registration p {
+  padding: 1px;
+}
+
+.registration input {
+  box-sizing: border-box;
+  display: block;
+  width: 100%;
+  border-width: 1px;
+  border-style: solid;
+  padding: 16px;
+  outline: 0;
+  font-family: inherit;
+  font-size: 0.95em;
+}
+
+.registration input[type="email"],
+.registration input[type="password"] {
+  background: #fff;
+  border-color: #bbb;
+  color: #555;
+}
+
+/* Text fields' focus effect */
+.registration input[type="email"]:focus,
+.registration input[type="password"]:focus {
+  border-color: #888;
+}
+
+.registration input[type="submit"] {
+  background: #28d;
+  border-color: transparent;
+  color: #fff;
+  cursor: pointer;
+}
+
+.registration input[type="submit"]:hover {
+  background: #17c;
+}
+
+/* Buttons' focus effect */
+.registration input[type="submit"]:focus {
+  border-color: #05a;
+}
+
+</style>
+
+<div class="registration">
+      {% if registered %}
+      <div class="jumbotron">
+        <h1>Thank you for registering!</h1>
+      </div>
+      {% else %}
+      <h2 class="registration-header">Register Here</h2>
+      <form class="registration-container" action="" method="POST">
+          {% csrf_token %}
+          <p>
+          {{ user_form.as_p }}
+          </p>
+          <br>
+          <p>
+        </p>
+        <p>
+          <input type="submit" name="" value="Register">
+        </p>
+        </form>
+
+      {% endif %}
+    </div>
+  </div>
+
+  {% endblock %}

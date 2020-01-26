@@ -1,0 +1,484 @@
+
+{% extends "base.html" %}
+{% load static %}
+{% block content %}
+<style >
+  .cl{
+    background:#ffffff
+  }
+  .item{
+    padding: 10px 10px 10px 10px;
+    margin: 10px 200px 10px 200px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+  }
+  .img-box{
+    padding: 10px 10px 10px 10px;
+    margin: 10px 10px 10px 10px;
+    border: 1px solid #d3d3d3;
+    border-radius: 5px;
+    display: inline-block;
+    width: 240px;
+    height: 240px;
+  }
+  .img{
+    max-width: 100%;
+    max-height: 100%;
+  }
+  .data{
+    display: inline-block;
+    font-family: 'Roboto Slab', serif;
+    font-size: 25px;
+  }
+  /* compare */
+  .barrel{
+    margin: 0 250px 20px 250px;
+    background-color: #ffffff;
+    border: 1px solid #d3d3d3;
+    border-radius: 2px;
+    text-align: center;
+    height: reletive;
+    z-index: 10;
+  }
+
+  footer {
+    position: fixed;
+    right: 0;
+    bottom: 20px;
+    left: 0;
+  }
+  .i{
+      background-color: #e3f4cf;
+      padding: 5px 5px 5px 5px;
+      margin: 5px 5px 5px 5px;
+      border: 0.3px solid #d3d3d3;
+      border-radius: 2px;
+      width: 300px;
+      height: 125px;
+  }
+  .i2{
+      width: 100px;
+      height: 120px;
+  }
+  .i2 img{
+      max-width: 100%;
+      max-height: 100%;
+  }
+
+	 h8{
+      display: inline-block;
+		}
+  .comp_btn{
+      padding: 25px 0 0 0;
+    }
+  .comp_btn button{
+    height:50px;
+    width:150px;
+    font-size:18px;
+    font-family: 'Patua One', cursive;
+    }
+  .selected{
+    colour: white;
+    background-color: #6abb70;
+    height:50px;
+    width:150px;
+    font-size:18px;
+    font-family: 'Patua One', cursive;
+    color: white;
+    position: absolute;
+    right: 240px;
+  }
+  .unselected{
+    background-color: #4692f0;
+    height:50px;
+    width:150px;
+    font-size:18px;
+    font-family: 'Patua One', cursive;
+    color: white;
+    position: absolute;
+    right: 240px;
+  }
+  .c1{
+    display: inline-block;
+    valign="top";
+  }
+  .c2{
+    display: inline-block;
+  }
+  .c3{
+    display: inline-block;
+  }
+</style>
+<form id='comp_form'>
+{% csrf_token %}
+{% for i in r %}
+<div class="item">
+  <table>
+    <tr>
+      <td>
+        <a href="{{i.link}}">
+        <div class="img-box">
+          <img  class="img mx-auto d-block" src="{{i.img}}" alt="{{i.name}}">
+        </div>
+      </a>
+      </td>
+      <td>
+        <a href="{{i.link}}">
+        <div class="data ">
+          {{i.name}}
+          <br>
+          {{i.price}}  {{i.discount}}
+        </div>
+      </a>
+      </td>
+      <td>
+
+          <button type="button" class="btn btn-labeled unselected" id="{{i.i_id}}" onclick="reply_click(this.id)" data_link="{{i.link}}" data_img="{{i.img}}" data_name="{{i.name}}">
+          <i class="glyphicon glyphicon-plus"></i>
+          Compare
+        </button>
+      </td>
+    </tr>
+  </table>
+</div>
+{% endfor %}
+</form>
+<footer>
+<div class="barrel row">
+        <div id="td1" class="i col">
+        </div>
+        <div id="td2" class="i col">
+        </div>
+        <div id="td3" class="i col">
+        </div>
+        <form class="col comp_btn" action="{% url 'compare'%}" method="post">
+          {% csrf_token %}
+          <button type="button submit" class="btn btn-primary" name="button">Compare</button>
+        </form>
+</div>
+</footer>
+<script>
+  var comp_item = [];
+  var comp_id = [];
+  var comp_item_img = [];
+  var comp_item_link = [];
+  if('{{C.item1}}'!='')
+      {
+        comp_item.push('{{C.item1}}');
+        comp_item_img.push('{{C.item1_img}}');
+        comp_item_link.push('{{C.item1_link}}');
+        i_id=comp_item[0];
+        i_id=i_id.slice(0,30);
+        i_id=i_id.split(' ').join('_');
+        i_id=i_id.split('.').join('_');
+        i_id=i_id.split('*').join('_');
+        i_id=i_id.split('|').join('_');
+        i_id=i_id.split('+').join('_');
+        i_id=i_id.split('-').join('_');
+        i_id=i_id.split('₹').join('_');
+        i_id=i_id.split(',').join('_');
+        i_id=i_id.split('(').join('_');
+        i_id=i_id.split(')').join('_');
+        comp_id[0]=i_id;
+        $('#td1').append('<table><tr class="i1"><td class="i2"><img class="col " src="{{C.item1_img}}" alt="{{C.item1}}"></td><td><h8 class="col">{{C.item1}}</h8></td><td valign="top" ><i id="c1" class="glyphicon glyphicon-remove" onclick="remove_click(this.id)"></i></td></tr></table>');
+      }
+  else {
+      comp_item.push('');
+      comp_item_img.push('');
+      comp_item_link.push('');
+  }
+  if('{{C.item2}}'!='')
+      {
+        comp_item.push('{{C.item2}}');
+        comp_item_img.push('{{C.item2_img}}');
+        comp_item_link.push('{{C.item2_link}}');
+        i_id=comp_item[1];
+        i_id=i_id.slice(0,30);
+        i_id=i_id.split(' ').join('_');
+        i_id=i_id.split('.').join('_');
+        i_id=i_id.split('*').join('_');
+        i_id=i_id.split('|').join('_');
+        i_id=i_id.split('+').join('_');
+        i_id=i_id.split('-').join('_');
+        i_id=i_id.split('₹').join('_');
+        i_id=i_id.split(',').join('_');
+        i_id=i_id.split('(').join('_');
+        i_id=i_id.split(')').join('_');
+        comp_id[1]=i_id;
+        $('#td2').append('<table><tr class="i1"><td class="i2"><img class="col " src="{{C.item2_img}}" alt="{{C.item2}}"></td><td><h8 class="col">{{C.item2}}</h8></td><td valign="top" ><i id="c2" class="glyphicon glyphicon-remove" onclick="remove_click(this.id)"></i></td></tr></table>');
+      }
+  else {
+      comp_item.push('');
+      comp_item_img.push('');
+      comp_item_link.push('');
+  }
+  if('{{C.item3}}'!='')
+      {
+        comp_item.push('{{C.item3}}');
+        comp_item_img.push('{{C.item3_img}}');
+        comp_item_link.push('{{C.item3_link}}');
+        i_id=comp_item[2];
+        i_id=i_id.slice(0,30);
+        i_id=i_id.split(' ').join('_');
+        i_id=i_id.split('.').join('_');
+        i_id=i_id.split('*').join('_');
+        i_id=i_id.split('|').join('_');
+        i_id=i_id.split('+').join('_');
+        i_id=i_id.split('-').join('_');
+        i_id=i_id.split('₹').join('_');
+        i_id=i_id.split(',').join('_');
+        i_id=i_id.split('(').join('_');
+        i_id=i_id.split(')').join('_');
+        comp_id[2]=i_id;
+        $('#td3').append('<table><tr class="i1"><td class="i2"><img class="col " src="{{C.item3_img}}" alt="{{C.item3}}"></td><td><h8 class="col">{{C.item3}}</h8></td><td valign="top" ><i id="c3" class="glyphicon glyphicon-remove" onclick="remove_click(this.id)"></i></td></tr></table>');
+      }
+  else {
+      comp_item.push('');
+      comp_item_img.push('');
+      comp_item_link.push('');
+  }
+
+function len(comp){
+  var j=0;
+  for (var i = 0; i < comp.length; i++) {
+    if (comp[i]=='') {
+      continue;
+    }
+    j++;
+  }
+  return --j;
+}
+
+function remove_click(id)
+{
+  if(id=='c1')
+  {
+    $('#td1').html('');
+    comp_item[0]='';
+    comp_item_img[0]='';
+    comp_item_link[0]='';
+    $('#'+comp_id[0]).toggleClass("selected");
+    $('#'+comp_id[0]).toggleClass("unselected");
+    console.log(id);
+    console.log(comp_id);
+  }
+  if(id=='c2')
+  {
+    $('#td2').html('');
+    comp_item[1]='';
+    comp_item_img[1]='';
+    comp_item_link[1]='';
+    $('#'+comp_id[1]).toggleClass("selected");
+    $('#'+comp_id[1]).toggleClass("unselected");
+    console.log(id);
+    console.log(comp_id);
+  }
+  if(id=='c3')
+  {
+    $('#td3').html('');
+    comp_item[2]='';
+    comp_item_img[2]='';
+    comp_item_link[2]='';
+    $('#'+comp_id[2]).toggleClass("selected");
+    $('#'+comp_id[2]).toggleClass("unselected");
+    console.log(id);
+    console.log(comp_id);
+  }
+    $.ajax({
+          type:'POST',
+          url:'/comp/',
+          data:{
+            i1:comp_item[0],
+            i2:comp_item[1],
+            i3:comp_item[2],
+            i1_img:comp_item_img[0],
+            i2_img:comp_item_img[1],
+            i3_img:comp_item_img[2],
+            i1_link:comp_item_link[0],
+            i2_link:comp_item_link[1],
+            i3_link:comp_item_link[2],
+            'csrfmiddlewaretoken': '{{ csrf_token }}',
+          },
+          success:function(){
+          }
+    });
+}
+function reply_click(id)
+{
+      item=document.getElementById(id).getAttribute('data_name');
+      item_img=document.getElementById(id).getAttribute('data_img');
+      item_link=document.getElementById(id).getAttribute('data_link');
+      var index = $.inArray(item, comp_item);
+      if(index !== -1)
+      {
+          if(index ==0)
+          {
+            $('#td1').html('');
+          }
+          if(index ==1)
+          {
+            $('#td2').html('');
+          }
+          if(index ==2)
+          {
+            $('#td3').html('');
+          }
+          comp_item[index]='';
+          comp_item_img[index]='';
+          comp_item_link[index]='';
+          $('#'+id).toggleClass("selected");
+          $('#'+id).toggleClass("unselected");
+      }
+      else
+      {
+        if(len(comp_item)<2)
+        {
+          console.log('aaaaaa');
+          if(comp_item[0]=='')
+              {
+                $('#td1').html('');
+                $('#td1').append('<table><tr class="i1"><td class="i2"><img class="col" src="'+item_img+'" alt="'+item+'"></td><td><h8 class="col">'+item+'</h8></td><td valign="top" ><i id="c1" class="glyphicon glyphicon-remove" onclick="remove_click(this.id)"></i></td></tr></table>');
+                comp_item[0]=item;
+                comp_item_img[0]=item_img;
+                comp_item_link[0]=item_link;
+                i_id=item;
+                i_id=i_id.slice(0,30);
+                i_id=i_id.split(' ').join('_');
+                i_id=i_id.split('.').join('_');
+                i_id=i_id.split('*').join('_');
+                i_id=i_id.split('|').join('_');
+                i_id=i_id.split('+').join('_');
+                i_id=i_id.split('-').join('_');
+                i_id=i_id.split('₹').join('_');
+                i_id=i_id.split(',').join('_');
+                i_id=i_id.split('(').join('_');
+                i_id=i_id.split(')').join('_');
+                comp_id[0]=i_id;
+              }
+          else if(comp_item[1]=='')
+              {
+                $('#td2').html('');
+                $('#td2').append('<table><tr class="i1"><td class="i2"><img class="col" src="'+item_img+'" alt="'+item+'"></td><td><h8 class="col">'+item+'</h8></td><td valign="top" ><i id="c2" class="glyphicon glyphicon-remove" onclick="remove_click(this.id)"></i></td></tr></table>');
+                comp_item[1]=item;
+                comp_item_img[1]=item_img;
+                comp_item_link[1]=item_link;
+                i_id=item;
+                i_id=i_id.slice(0,30);
+                i_id=i_id.split(' ').join('_');
+                i_id=i_id.split('.').join('_');
+                i_id=i_id.split('*').join('_');
+                i_id=i_id.split('|').join('_');
+                i_id=i_id.split('+').join('_');
+                i_id=i_id.split('-').join('_');
+                i_id=i_id.split('₹').join('_');
+                i_id=i_id.split(',').join('_');
+                i_id=i_id.split('(').join('_');
+                i_id=i_id.split(')').join('_');
+                comp_id[1]=i_id;
+              }
+          else if(comp_item[2]=='')
+              {
+                $('#td3').html('');
+                $('#td3').append('<table><tr class="i1"><td class="i2"><img class="col" src="'+item_img+'" alt="'+item+'"></td><td><h8 class="col">'+item+'</h8></td><td valign="top" ><i id="c3" class="glyphicon glyphicon-remove" onclick="remove_click(this.id)"></i></td></tr></table>');
+                comp_item[2]=item;
+                comp_item_img[2]=item_img;
+                comp_item_link[2]=item_link;
+                i_id=item;
+                i_id=i_id.slice(0,30);
+                i_id=i_id.split(' ').join('_');
+                i_id=i_id.split('.').join('_');
+                i_id=i_id.split('*').join('_');
+                i_id=i_id.split('|').join('_');
+                i_id=i_id.split('+').join('_');
+                i_id=i_id.split('-').join('_');
+                i_id=i_id.split('₹').join('_');
+                i_id=i_id.split(',').join('_');
+                i_id=i_id.split('(').join('_');
+                i_id=i_id.split(')').join('_');
+                comp_id[2]=i_id;
+              }
+          $('#'+id).toggleClass("selected");
+          $('#'+id).toggleClass("unselected");
+        }
+        else {
+          alert("You can't compare more than 3 products at one time")
+        }
+      }
+      console.log(comp_item);
+      $.ajax({
+            type:'POST',
+            url:'/comp/',
+            data:{
+              i1:comp_item[0],
+              i2:comp_item[1],
+              i3:comp_item[2],
+              i1_img:comp_item_img[0],
+              i2_img:comp_item_img[1],
+              i3_img:comp_item_img[2],
+              i1_link:comp_item_link[0],
+              i2_link:comp_item_link[1],
+              i3_link:comp_item_link[2],
+              'csrfmiddlewaretoken': '{{ csrf_token }}',
+            },
+            success:function(){
+            }
+      });
+}
+
+if('{{C.item1}}'!='')
+    {
+      i_id='{{C.item1}}';
+      i_id=i_id.slice(0,30);
+      i_id=i_id.split(' ').join('_');
+      i_id=i_id.split('.').join('_');
+      i_id=i_id.split('*').join('_');
+      i_id=i_id.split('|').join('_');
+      i_id=i_id.split('+').join('_');
+      i_id=i_id.split('-').join('_');
+      i_id=i_id.split('₹').join('_');
+      i_id=i_id.split(',').join('_');
+      i_id=i_id.split('(').join('_');
+      i_id=i_id.split(')').join('_');
+      comp_id[0]=i_id;
+      $('#'+i_id).toggleClass("selected");
+      $('#'+i_id).toggleClass("unselected");
+    }
+if('{{C.item2}}'!='')
+    {
+      i_id='{{C.item2}}';
+      i_id=i_id.slice(0,30);
+      i_id=i_id.split(' ').join('_');
+      i_id=i_id.split('.').join('_');
+      i_id=i_id.split('*').join('_');
+      i_id=i_id.split('|').join('_');
+      i_id=i_id.split('+').join('_');
+      i_id=i_id.split('-').join('_');
+      i_id=i_id.split('₹').join('_');
+      i_id=i_id.split(',').join('_');
+      i_id=i_id.split('(').join('_');
+      i_id=i_id.split(')').join('_');
+      comp_id[1]=i_id;
+      $('#'+i_id).toggleClass("selected");
+      $('#'+i_id).toggleClass("unselected");
+    }
+if('{{C.item3}}'!='')
+    {
+      i_id='{{C.item3}}';
+      i_id=i_id.slice(0,30);
+      i_id=i_id.split(' ').join('_');
+      i_id=i_id.split('.').join('_');
+      i_id=i_id.split('*').join('_');
+      i_id=i_id.split('|').join('_');
+      i_id=i_id.split('+').join('_');
+      i_id=i_id.split('-').join('_');
+      i_id=i_id.split('₹').join('_');
+      i_id=i_id.split(',').join('_');
+      i_id=i_id.split('(').join('_');
+      i_id=i_id.split(')').join('_');
+      comp_id[2]=i_id;
+      $('#'+i_id).toggleClass("selected");
+      $('#'+i_id).toggleClass("unselected");
+    }
+    console.log(comp_id);
+</script>
+{% endblock %}
